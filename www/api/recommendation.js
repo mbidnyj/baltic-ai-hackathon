@@ -1,6 +1,6 @@
-module.exports = async (req, reqres) => {
-    const userId = req.params.userId;
-    const moduleId = req.params.moduleId;
+module.exports = async (req, res) => {
+    const userId = req.query.userId;
+    const moduleId = req.query.moduleId;
     if (userId == "1") {
         const recommendation = {
             personalized_text_rec: "PERSONALIZED TEXT RECOMMENDATION",
