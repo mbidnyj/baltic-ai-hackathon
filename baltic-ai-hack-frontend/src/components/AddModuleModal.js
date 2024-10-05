@@ -46,16 +46,16 @@ const AddModuleModal = ({ isOpen, onClose }) => {
               <option value="9">9</option>
             </select>
           </div>
-          <div className="flex space-x-4">
-            <div className="flex items-center space-x-2">
-              <label>Number of questions:</label>
-              <button className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none">Automatic</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none">5</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none">8</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none">10</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none">15</button>
+          <div class="flex justify-between items-center">
+            <span class="question-label">Number of questions:</span>
+            <div class="pills-container space-x-1">
+                <button class="text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none">Automatic</button>
+                <button class="text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none">5</button>
+                <button class="text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none">8</button>
+                <button class="text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none">10</button>
+                <button class="text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none">15</button>
             </div>
-          </div>
+            </div>
           <div className="flex flex-col">
             <label className="mb-2">Question Type</label>
             <select className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">

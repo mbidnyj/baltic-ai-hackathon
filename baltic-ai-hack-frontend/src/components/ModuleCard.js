@@ -4,12 +4,6 @@ import PropTypes from 'prop-types';
 const ModuleCard = ({ title, subject, description, questions, grade, students }) => {
   return (
     <div className="flex flex-col bg-white border border-solid shadow-sm rounded-xl">
-      {/* Optional Image Section - You can remove this line if you don't need an image */}
-      <img
-        className="w-full h-auto rounded-t-xl"
-        src="https://via.placeholder.com/320"
-        alt="Module Image"
-      />
       <div className="p-4 md:p-5">
         <h3 className="text-lg font-bold text-gray-800">{title}</h3>
         <p className="mt-1 text-sm font-semibold text-gray-500 uppercase">{subject}</p>
