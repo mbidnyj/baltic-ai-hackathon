@@ -1,11 +1,11 @@
 require("dotenv").config({ path: "./config/config.env" });
-const { db, populateDb } = require("./integrations/dbModule");
+const { db, setupDatabase } = require("./integrations/dbModule");
 const startServer = require("./api/startServer");
 
 const main = async () => {
     try {
         // Populate the database with synthetic data
-        await populateDb();
+        await setupDatabase();
         console.log("Database populated with synthetic data");
 
         // Start the server
