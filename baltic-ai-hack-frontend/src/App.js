@@ -7,6 +7,7 @@ import Login from "./components/Auth/Login";
 import SignUp from "./components/Auth/SignUp";
 import { UserProvider } from "./context/UserContext";
 import LandingPage from "./components/LandingPage";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
               element={<ModulePreview />}
             />
             <Route path="/module/:moduleId/edit" element={<EditModule />} />
+
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Routes>
       </UserProvider>
