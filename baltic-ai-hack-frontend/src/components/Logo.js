@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Logo = ({ size = "md" }) => {
   let sizes = {
@@ -8,9 +9,9 @@ const Logo = ({ size = "md" }) => {
   };
 
   return (
-    <a href="/">
+    <Link to="/">
       <img className={sizes[size]} src="/logo-with-text.png" />
-    </a>
+    </Link>
   );
 };
 

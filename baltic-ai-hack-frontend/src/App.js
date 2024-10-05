@@ -1,24 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import TeacherDashboard from "./components/TeacherDashboard";
 import ModulePreview from "./components/ModulePreview";
-import EditModule from "./components/EditModule"; // Import the new EditModule component
+import EditModule from "./components/EditModule";
 import Login from "./components/Auth/Login";
 import SignUp from "./components/Auth/SignUp";
-import LandingPage from "./components/LandingPage";
 import { UserProvider } from "./context/UserContext";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   return (
-    <UserProvider>
-      <Router>
+    <Router>
+      <UserProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route index element={<LandingPage />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
-            <Route index element={<LandingPage />} />
-            <Route path="/teacher" element={<TeacherDashboard />} />
             <Route
               path="/module/:moduleId/preview"
               element={<ModulePreview />}
@@ -26,8 +24,8 @@ function App() {
             <Route path="/module/:moduleId/edit" element={<EditModule />} />
           </Route>
         </Routes>
-      </Router>
-    </UserProvider>
+      </UserProvider>
+    </Router>
   );
 }
 
