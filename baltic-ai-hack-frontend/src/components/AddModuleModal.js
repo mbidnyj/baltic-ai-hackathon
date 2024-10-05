@@ -24,21 +24,22 @@ const AddModuleModal = ({ isOpen, onClose }) => {
         try {
             const creatorId = 1; // Replace this with the actual creator ID
 
-            const formData = new FormData();
-            formData.append("title", quizTitle);
-            formData.append("description", description);
-            formData.append("creatorId", creatorId);
-            formData.append("subject", subject);
-            formData.append("grade", grade);
-            formData.append("questionCount", questionCount);
-            formData.append("questionType", questionType);
-            if (file) {
-                formData.append("studyMaterial", file);
-            }
+            const formData = {
+                title: quizTitle,
+                description: description,
+                creatorId: creatorId,
+                subject: subject,
+                grade: grade,
+                questionCount: questionCount,
+                questionType: questionType,
+            };
+
+            console.log("Sending request to generate quiz...");
+            console.log("Form data:", formData);
 
             const response = await axios.post("http://localhost:8080/api/module", formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
+                    "Content-Type": "application/json",
                 },
             });
             console.log("Response from server:", response.data);
@@ -47,6 +48,14 @@ const AddModuleModal = ({ isOpen, onClose }) => {
             navigate(`/module/${moduleId}/edit`);
         } catch (error) {
             console.error("Error generating quiz:", error);
+            if (error.response) {
+                console.error("Response data:", error.response.data);
+                console.error("Response status:", error.response.status);
+            } else if (error.request) {
+                console.error("No response received:", error.request);
+            } else {
+                console.error("Error setting up request:", error.message);
+            }
         }
     };
 
