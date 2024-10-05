@@ -10,7 +10,7 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 
   // Handle preview button click
   const handlePreviewClick = () => {
-    navigate(`/module/${moduleId}/preview`);
+    navigate(`/module/${moduleId}/preview`, { state: { moduleId, title, subject, description, questions, grade, students } });
   };
 
   return (

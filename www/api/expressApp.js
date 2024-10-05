@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const compression = require("compression");
 const user = require("./user");
-const getModule = require("./getModule");
+const getQuiz = require("./getQuiz");
 const postModule = require("./postModule");
 const recommendation = require("./recommendation");
 const getModules = require("./getModules");
@@ -21,7 +21,7 @@ function getApp() {
     app.use(express.static("public"));
 
     app.get("/api/user", user);
-    app.get("/api/module", getModule);
+    app.get("/api/quiz", getQuiz); // have to specify the moduleId as well
     app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);
