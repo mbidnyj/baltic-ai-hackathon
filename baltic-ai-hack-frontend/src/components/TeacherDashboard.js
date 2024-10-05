@@ -13,8 +13,8 @@ const TeacherDashboard = () => {
   console.log('TeacherDashboard component rendered');
 
   useEffect(() => {
-    console.log('Fetching modules...'); // Add this log
-
+    console.log('Fetching modules...');
+  
     const fetchModules = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/modules');
@@ -22,17 +22,17 @@ const TeacherDashboard = () => {
           throw new Error('Failed to fetch modules');
         }
         const data = await response.json();
-        console.log('Modules fetched:', data); // Log the data
-
+        console.log('Modules fetched:', data); // Log the fetched data
+  
         setModules(data);
         setLoading(false);
       } catch (err) {
-        console.error('Error:', err.message); // Add this log
+        console.error('Error:', err.message); // Log the error if there's any
         setError(err.message);
         setLoading(false);
       }
     };
-
+  
     fetchModules();
   }, []);
 

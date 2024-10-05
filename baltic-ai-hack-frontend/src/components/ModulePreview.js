@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import ModulePreviewTop from './ModulePreviewTop'; // Your new top component
+import QuestionCard from './QuestionCard'; // Import the QuestionCard component
 
 const ModulePreview = () => {
   const { moduleId } = useParams(); // Get moduleId from the URL
-  const location = useLocation(); // Get the module data from the state passed by navigate
   const [moduleData, setModuleData] = useState(null);
+  const [quizData, setQuizData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchModuleData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/quiz?moduleId=${moduleId}`);
+        const response = await fetch(`http://localhost:8080/api/module/${moduleId}/preview`);
         if (!response.ok) {
           throw new Error('Failed to fetch module data');
         }
         const data = await response.json();
-        setModuleData(data); // Set the fetched module data
+
+        setModuleData(data.module); // Set the module details
+        setQuizData(data.quiz);     // Set the quiz data (can be null)
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -27,27 +32,68 @@ const ModulePreview = () => {
     fetchModuleData();
   }, [moduleId]);
 
+  const handleDeleteModule = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/module/${moduleId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete module');
+      }
+      // After deletion, navigate to a different route (for example, back to the dashboard)
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting module:', error);
+    }
+  };
+
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Module Preview for Module ID: {moduleId}</h1>
-      
-      {/* Display loading, error, or module data */}
+      {/* Top Section */}
+      <ModulePreviewTop
+        title={moduleData?.title || "Module Title"}
+        questionCount={quizData?.questions.length || 0}
+        points={quizData?.questions.length || 0}
+        onDelete={handleDeleteModule} // Pass the delete handler here
+      />
+
+      {/* Loading and Error State */}
       {loading && <p>Loading module data...</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
-      
-      {/* Show the module information passed from the previous page */}
-      <h2 className="text-xl font-semibold mb-2">Initial Module Data (from navigation):</h2>
-      <pre className="bg-gray-100 p-4 rounded">
-        {JSON.stringify(location.state, null, 2)}
-      </pre>
 
-      {/* Show the data fetched from the API */}
-      <h2 className="text-xl font-semibold mb-2 mt-6">Module Data from API:</h2>
+      {/* Module Information */}
       {moduleData && (
-        <pre className="bg-gray-100 p-4 rounded">
-          {JSON.stringify(moduleData, null, 2)}
-        </pre>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Module Information:</h2>
+          <p><strong>Title:</strong> {moduleData.title}</p>
+          <p><strong>Description:</strong> {moduleData.description}</p>
+          <p><strong>Subject:</strong> {moduleData.subject}</p>
+          <p><strong>Grade:</strong> {moduleData.grade}</p>
+          <p><strong>Students Enrolled:</strong> {moduleData.students}</p>
+        </div>
       )}
+
+      {/* Quiz Questions */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold mb-2">Initial Quiz:</h2>
+        {quizData ? (
+          <div>
+            {/* Render each question using QuestionCard */}
+            {quizData.questions.map((question, index) => (
+              <QuestionCard
+                key={index}
+                question={question.question_text}
+                options={question.options}
+                hint={question.hint}
+                currentIndex={index + 1}
+                totalQuestions={quizData.questions.length}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>No initial quiz found for this module.</p>
+        )}
+      </div>
     </div>
   );
 };

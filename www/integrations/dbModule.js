@@ -25,45 +25,17 @@ const setupDatabase = () => {
                 password TEXT NOT NULL,
                 role TEXT NOT NULL CHECK(role IN ('student', 'teacher')),
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )`, (err) => {
-                if (err) console.error("Error creating users table:", err.message);
-            });
+            )`);
 
             // Create modules table
             db.run(`CREATE TABLE IF NOT EXISTS modules (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 description TEXT,
-                subject TEXT,
-                grade INTEGER,
-                no_questions INTEGER,
-                enrolled_students INTEGER,
                 creator_id INTEGER NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (creator_id) REFERENCES users(id)
-            )`, (err) => {
-                if (err) console.error("Error creating modules table:", err.message);
-            });
-
-            // Insert sample data into the `modules` table only if it is empty
-            db.get(`SELECT COUNT(*) as count FROM modules`, (err, row) => {
-                if (err) {
-                    console.error("Error counting modules:", err.message);
-                } else if (row.count === 0) {
-                    // Insert sample modules
-                    db.run(`INSERT INTO modules (title, description, subject, grade, no_questions, enrolled_students, creator_id) VALUES 
-                        ('Physics Fundamentals', 'Learn about the laws of motion.', 'PHYSICS', 8, 15, 48, 1),
-                        ('World History', 'Understand key events in world history.', 'HISTORY', 4, 10, 7, 2)`, (err) => {
-                        if (err) {
-                            console.error("Error inserting sample modules:", err.message);
-                        } else {
-                            console.log("Sample modules inserted successfully.");
-                        }
-                    });
-                } else {
-                    console.log(`Modules table already has ${row.count} records.`);
-                }
-            });
+            )`);
 
             // Create quizzes table
             db.run(`CREATE TABLE IF NOT EXISTS quizzes (
@@ -71,14 +43,10 @@ const setupDatabase = () => {
                 module_id INTEGER NOT NULL,
                 is_initial BOOLEAN NOT NULL DEFAULT 0,
                 created_by INTEGER NOT NULL,
-                generated_for_student_id INTEGER,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (module_id) REFERENCES modules(id),
-                FOREIGN KEY (created_by) REFERENCES users(id),
-                FOREIGN KEY (generated_for_student_id) REFERENCES users(id)
-            )`, (err) => {
-                if (err) console.error("Error creating quizzes table:", err.message);
-            });
+                FOREIGN KEY (created_by) REFERENCES users(id)
+            )`);
 
             // Create questions table
             db.run(`CREATE TABLE IF NOT EXISTS questions (
@@ -87,9 +55,7 @@ const setupDatabase = () => {
                 question_text TEXT NOT NULL,
                 hint TEXT,
                 FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
-            )`, (err) => {
-                if (err) console.error("Error creating questions table:", err.message);
-            });
+            )`);
 
             // Create answer_options table
             db.run(`CREATE TABLE IF NOT EXISTS answer_options (
@@ -98,49 +64,45 @@ const setupDatabase = () => {
                 option_text TEXT NOT NULL,
                 is_correct BOOLEAN NOT NULL DEFAULT 0,
                 FOREIGN KEY (question_id) REFERENCES questions(id)
-            )`, (err) => {
-                if (err) console.error("Error creating answer_options table:", err.message);
-            });
+            )`);
 
-            // Create student_quiz_assignments table
-            db.run(`CREATE TABLE IF NOT EXISTS student_quiz_assignments (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                student_id INTEGER NOT NULL,
-                quiz_id INTEGER NOT NULL,
-                assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (student_id) REFERENCES users(id),
-                FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
-            )`, (err) => {
-                if (err) console.error("Error creating student_quiz_assignments table:", err.message);
-            });
+            // Insert sample module, quiz, questions, and answers data
+            db.run(`INSERT INTO modules (title, description, creator_id) 
+                    VALUES ('Physics Fundamentals', 'Learn about the laws of motion.', 1)`);
+            
+            db.run(`INSERT INTO modules (title, description, creator_id) 
+                    VALUES ('World History', 'Understand key events in world history.', 1)`);
 
-            // Create quiz_attempts table
-            db.run(`CREATE TABLE IF NOT EXISTS quiz_attempts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                student_id INTEGER NOT NULL,
-                quiz_id INTEGER NOT NULL,
-                attempt_number INTEGER NOT NULL,
-                started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                completed_at DATETIME,
-                score REAL,
-                FOREIGN KEY (student_id) REFERENCES users(id),
-                FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
-            )`, (err) => {
-                if (err) console.error("Error creating quiz_attempts table:", err.message);
-            });
+            // Insert sample quiz for Physics module (module_id = 1)
+            db.run(`INSERT INTO quizzes (module_id, is_initial, created_by) 
+                    VALUES (1, 1, 1)`); // Initial quiz for Physics
 
-            // Create student_answers table
-            db.run(`CREATE TABLE IF NOT EXISTS student_answers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                quiz_attempt_id INTEGER NOT NULL,
-                question_id INTEGER NOT NULL,
-                selected_option_id INTEGER NOT NULL,
-                FOREIGN KEY (quiz_attempt_id) REFERENCES quiz_attempts(id),
-                FOREIGN KEY (question_id) REFERENCES questions(id),
-                FOREIGN KEY (selected_option_id) REFERENCES answer_options(id)
-            )`, (err) => {
-                if (err) console.error("Error creating student_answers table:", err.message);
-            });
+            // Insert sample questions for the Physics quiz (quiz_id = 1)
+            db.run(`INSERT INTO questions (quiz_id, question_text, hint) 
+                    VALUES (1, "What is Newton's First Law?", "It describes inertia.")`);
+            
+            db.run(`INSERT INTO questions (quiz_id, question_text, hint) 
+                    VALUES (1, "What is the unit of force?", "Named after a famous physicist.")`);
+
+            // Insert answer options for the first question
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (1, "An object in motion stays in motion", 1)`); // Correct answer
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (1, "Force equals mass times acceleration", 0)`);
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (1, "For every action, there is an equal and opposite reaction", 0)`);
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (1, "Objects at rest stay at rest unless acted upon", 0)`);
+
+            // Insert answer options for the second question
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (2, "Newton", 1)`); // Correct answer
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (2, "Joule", 0)`);
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (2, "Watt", 0)`);
+            db.run(`INSERT INTO answer_options (question_id, option_text, is_correct) 
+                    VALUES (2, "Pascal", 0)`);
 
             resolve();
         });

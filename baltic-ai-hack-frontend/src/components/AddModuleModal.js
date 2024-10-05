@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios'; // Make sure to install axios via `npm install axios`
+import axios from 'axios'; // Ensure axios is installed via `npm install axios`
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 
 const AddModuleModal = ({ isOpen, onClose }) => {
   const [quizTitle, setQuizTitle] = useState('');
@@ -9,6 +10,8 @@ const AddModuleModal = ({ isOpen, onClose }) => {
   const [grade, setGrade] = useState('');
   const [questionCount, setQuestionCount] = useState('Automatic');
   const [questionType, setQuestionType] = useState('MULTIPLE_CHOICE');
+
+  const navigate = useNavigate(); // Initialize the navigate hook
 
   if (!isOpen) return null;
 
@@ -27,8 +30,15 @@ const AddModuleModal = ({ isOpen, onClose }) => {
         questionType,
       };
   
+      // Send a POST request to create the module
       const response = await axios.post('http://localhost:8080/api/module', requestData);
       console.log('Response from server:', response.data);
+
+      // Assuming the backend returns the newly created module's ID (response.data.moduleId)
+      const moduleId = response.data.moduleId; // Extract the moduleId from the response
+      
+      // Redirect the user to the preview page of the newly created module
+      navigate(`/module/${moduleId}/preview`);
     } catch (error) {
       console.error('Error generating quiz:', error);
     }
