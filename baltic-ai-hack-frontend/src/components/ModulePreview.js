@@ -52,6 +52,7 @@ const ModulePreview = () => {
       {/* Top Section */}
       <ModulePreviewTop
         title={moduleData?.title || "Module Title"}
+        description={moduleData?.description || "..."}
         questionCount={quizData?.questions.length || 0}
         points={quizData?.questions.length || 0}
         onDelete={handleDeleteModule} // Pass the delete handler here

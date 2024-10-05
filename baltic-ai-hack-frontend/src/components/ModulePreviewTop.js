@@ -1,12 +1,13 @@
 import React from "react";
 
-const ModulePreviewTop = ({ title, questionCount, points, onDelete }) => {
+const ModulePreviewTop = ({ title, description, questionCount, points, onDelete }) => {
   return (
     <div className="flex justify-between items-center mb-4">
     <div className="flex flex-col justify-center self-stretch my-auto">
         <div className="text-2xl font-semibold tracking-normal text-black">
         {title}
         </div>
+        <p className="text-gray-600">{description}</p>
         <div className="flex gap-2 items-start self-start mt-2 text-xs font-medium tracking-normal leading-none text-gray-800">
         <div className="flex items-start shadow-sm">
             <div className="flex gap-px items-center p-1.5 bg-white rounded-md border border-solid">
