@@ -26,7 +26,6 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 
   // Handle edit button click
   const handleEditClick = () => {
-    console.log(moduleId);
     navigate(`/module/${moduleId}/edit`, {
       state: { moduleId, title, subject, description, questions, grade, students },
     });
@@ -84,7 +83,7 @@ ModuleCard.propTypes = {
   title: PropTypes.string.isRequired,
   subject: PropTypes.oneOf(['SCIENCE', 'MATH', 'BIOLOGY', 'ENGLISH', 'HISTORY', 'PHYSICS']).isRequired,
   description: PropTypes.string.isRequired,
-  questions: PropTypes.number.isRequired, // Changed to number since it's a count
+  questions: PropTypes.number.isRequired, 
   grade: PropTypes.oneOf([4, 5, 6, 7, 8, 9]).isRequired,
   students: PropTypes.number.isRequired,
 };
