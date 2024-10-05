@@ -2,6 +2,7 @@ import React from "react";
 import Logo from "./Logo";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import SignOutButton from "./SignOutButton";
 
 const Header = () => {
   const { userType } = useUser();
@@ -49,6 +50,7 @@ const Header = () => {
                 <p className="text-sm text-gray-500">Teacher</p>
               </div>
             </div>
+            <SignOutButton />
           </div>
         </>
       )}
@@ -83,6 +85,7 @@ const Header = () => {
                 </Link>
                 <p className="text-sm text-gray-500">Student</p>
               </div>
+              <SignOutButton />
             </div>
           </div>
         </>

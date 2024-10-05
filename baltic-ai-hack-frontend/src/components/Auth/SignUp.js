@@ -12,7 +12,7 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const { setUserType } = useUser();
+  const { loginUser } = useUser();
 
   const handleInputChange = (e) => {
     setFormData({
@@ -23,14 +23,8 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    setUserType(formData.userType);
-
-    if (formData.userType === "student") {
-      navigate("/student");
-    } else if (formData.userType === "teacher") {
-      navigate("/teacher");
-    }
+    loginUser(formData.userType); // Set the user role using `loginUser`
+    navigate("/"); // Redirect after login
   };
 
   return (

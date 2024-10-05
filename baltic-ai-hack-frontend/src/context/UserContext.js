@@ -1,18 +1,28 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-// Create UserContext
 const UserContext = createContext();
 
-// Create a custom hook to access the context
-export const useUser = () => useContext(UserContext);
-
-// Create a provider component
 export const UserProvider = ({ children }) => {
-  const [userType, setUserType] = useState("guest");
+  const [userType, setUserType] = useState("guest"); // `setUserType` is defined here
+
+  // Function to log in the user and set the userType
+  const loginUser = (type) => {
+    setUserType(type); // Set userType to either 'teacher' or 'student'
+  };
+
+  // Function to log out the user and reset the userType
+  const signOut = () => {
+    setUserType("guest"); // Reset userType to null
+  };
 
   return (
-    <UserContext.Provider value={{ userType, setUserType }}>
+    <UserContext.Provider value={{ userType, setUserType, loginUser, signOut }}>
       {children}
     </UserContext.Provider>
   );
+};
+
+// Custom hook to use the UserContext
+export const useUser = () => {
+  return useContext(UserContext);
 };
