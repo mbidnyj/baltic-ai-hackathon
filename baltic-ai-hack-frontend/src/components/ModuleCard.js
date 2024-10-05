@@ -26,7 +26,6 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 
   // Handle edit button click
   const handleEditClick = () => {
-    console.log(moduleId);
     navigate(`/module/${moduleId}/edit`, {
       state: { moduleId, title, subject, description, questions, grade, students },
     });
