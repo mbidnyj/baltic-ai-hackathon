@@ -208,7 +208,7 @@ const EditModule = () => {
                     </div>
 
                     {/* File Upload Section */}
-                    <div className="mb-4">
+                    <div className="mb-4 max-w-[930px]">
                         <label className="block text-gray-700">Change file</label>
                         <input type="file" className="w-full px-3 py-2 border rounded-md" />
                     </div>

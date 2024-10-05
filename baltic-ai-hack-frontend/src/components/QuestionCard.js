@@ -24,7 +24,7 @@ function QuestionCard({
   }
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-solid shadow-sm max-w-[930px] bg-white mb-4">
+    <div className="flex flex-col center overflow-hidden rounded-xl border border-solid shadow-sm max-w-[930px] bg-white mb-4">
       <div className="flex flex-col items-start p-5 w-full">
         {/* Header */}
         <div className="flex justify-between w-full items-center">
