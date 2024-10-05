@@ -5,6 +5,7 @@ const user = require("./user");
 const getModule = require("./getModule");
 const postModule = require("./postModule");
 const recommendation = require("./recommendation");
+const getModules = require("./getModules");
 
 function getApp() {
     const app = express();
@@ -21,8 +22,10 @@ function getApp() {
 
     app.get("/api/user", user);
     app.get("/api/module", getModule);
+    app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);
+
     return app;
 }
 

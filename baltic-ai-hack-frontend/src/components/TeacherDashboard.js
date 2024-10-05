@@ -1,10 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModuleCard from './ModuleCard';
 import AddModuleModal from './AddModuleModal';
 import AddIcon from '@mui/icons-material/Add'; // Material Icon for "Add"
 
 const TeacherDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch modules from the backend API
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/modules');
+        if (!response.ok) {
+          throw new Error('Failed to fetch modules');
+        }
+        const data = await response.json();
+        setModules(data); // Assuming the API returns an array of modules
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchModules();
+  }, []);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -28,27 +51,29 @@ const TeacherDashboard = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Render Module Cards */}
-          <ModuleCard
-            moduleId="1" // Unique module ID
-            title="Module Title"
-            subject="PHYSICS"
-            description="Learn everything about the most famous man to be hit on the head with an apple."
-            questions="15"
-            grade="8"
-            students="48"
-          />
-          <ModuleCard
-            moduleId="2" // Unique module ID
-            title="Module Title"
-            subject="HISTORY"
-            description="This is just some filler description of the study module."
-            questions="10"
-            grade="4"
-            students="7"
-          />
-        </div>
+        {/* Loading State */}
+        {loading && <p>Loading modules...</p>}
+
+        {/* Error State */}
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        {/* Render Module Cards */}
+        {!loading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {modules.map((module) => (
+              <ModuleCard
+                key={module.moduleId}
+                moduleId={module.moduleId}
+                title={module.title}
+                subject={module.subject}
+                description={module.description}
+                questions={module.questions}
+                grade={module.grade}
+                students={module.students}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Statistics Section (Placeholder) */}
