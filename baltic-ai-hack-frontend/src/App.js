@@ -4,18 +4,30 @@ import Layout from "./components/Layout";
 import TeacherDashboard from "./components/TeacherDashboard";
 import ModulePreview from "./components/ModulePreview";
 import EditModule from "./components/EditModule"; // Import the new EditModule component
+import Login from "./components/Auth/Login";
+import SignUp from "./components/Auth/SignUp";
+import LandingPage from "./components/LandingPage";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<TeacherDashboard />} />
-          <Route path="/module/:moduleId/preview" element={<ModulePreview />} />
-          <Route path="/module/:moduleId/edit" element={<EditModule />} />
-        </Route>
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route index element={<LandingPage />} />
+            <Route path="/teacher" element={<TeacherDashboard />} />
+            <Route
+              path="/module/:moduleId/preview"
+              element={<ModulePreview />}
+            />
+            <Route path="/module/:moduleId/edit" element={<EditModule />} />
+          </Route>
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 
