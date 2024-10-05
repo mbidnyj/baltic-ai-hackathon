@@ -1,8 +1,6 @@
 const { db } = require("../integrations/dbModule");
-const path = require("path");
-const fs = require("fs").promises;
 const pdf = require("pdf-parse");
-const { prompt_groq_text } = require("../lama");
+const prompt_groq_text = require("../lama");
 
 module.exports = async (req, res) => {
     console.log("Received request to /api/module");
@@ -92,30 +90,130 @@ Json template:
             "correct_answer": "<some option/>",
             "hint": "<some hint based on the studying materials provided/>"
         },
-        // ... (rest of the JSON template)
+        {
+            "question_id": "2",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "3",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "4",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "5",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "6",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "7",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "8",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "9",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
+        {
+            "question_id": "10",
+            "question_type": "single_choice_answer",
+            "question": "<question itself/>",
+            "options": [
+                "<option1/>",
+                "<option2/>",
+                "<option3/>",
+                "<option4/>"
+            ],
+            "correct_answer": "<some option/>",
+            "hint": "<some hint based on the studying materials provided/>"
+        },
     ]
 }`;
 
         try {
             const result = await prompt_groq_text(prompt, true);
-            console.log("Received response from LLM");
-            const generatedQuiz = result.message.content;
 
-            // Save the generated quiz as a JSON file
-            const quizJsonPath = path.join(__dirname, "..", "generated_quizzes", `quiz_${moduleId}.json`);
-            await fs.mkdir(path.dirname(quizJsonPath), { recursive: true });
-            await fs.writeFile(quizJsonPath, generatedQuiz);
-
-            // Save the generated quiz as a text file
-            const quizTextPath = path.join(__dirname, "..", "generated_quizzes", `quiz_${moduleId}.txt`);
-            await fs.writeFile(quizTextPath, generatedQuiz);
-
-            res.status(201).json({
-                success: true,
-                message: "Module created and quiz generated successfully",
-                moduleId: moduleId,
-                generatedQuiz: JSON.parse(generatedQuiz),
-            });
+            res.status(200).json(result);
         } catch (error) {
             console.error("Error generating quiz:", error.message);
             res.status(500).json({
