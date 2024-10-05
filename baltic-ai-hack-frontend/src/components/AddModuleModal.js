@@ -44,7 +44,7 @@ const AddModuleModal = ({ isOpen, onClose }) => {
             console.log("Response from server:", response.data);
 
             const moduleId = response.data.moduleId;
-            navigate(`/module/${moduleId}/preview`);
+            navigate(`/module/${moduleId}/edit`);
         } catch (error) {
             console.error("Error generating quiz:", error);
         }
