@@ -32,6 +32,7 @@ const setupDatabase = () => {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 description TEXT,
+                grade INTEGER,
                 creator_id INTEGER NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (creator_id) REFERENCES users(id)
@@ -42,6 +43,7 @@ const setupDatabase = () => {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 module_id INTEGER NOT NULL,
                 is_initial BOOLEAN NOT NULL DEFAULT 0,
+                question_count INTEGER,
                 created_by INTEGER NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (module_id) REFERENCES modules(id),
@@ -67,15 +69,12 @@ const setupDatabase = () => {
             )`);
 
             // Insert sample module, quiz, questions, and answers data
-            db.run(`INSERT INTO modules (title, description, creator_id) 
-                    VALUES ('Physics Fundamentals', 'Learn about the laws of motion.', 1)`);
-            
-            db.run(`INSERT INTO modules (title, description, creator_id) 
-                    VALUES ('World History', 'Understand key events in world history.', 1)`);
+            db.run(`INSERT INTO modules (title, description, grade, creator_id) 
+                    VALUES ('Physics Fundamentals', 'Learn about the laws of motion.', 8, 1)`);
 
             // Insert sample quiz for Physics module (module_id = 1)
-            db.run(`INSERT INTO quizzes (module_id, is_initial, created_by) 
-                    VALUES (1, 1, 1)`); // Initial quiz for Physics
+            db.run(`INSERT INTO quizzes (module_id, is_initial, question_count, created_by) 
+                    VALUES (1, 1, 5, 1)`); // Initial quiz for Physics
 
             // Insert sample questions for the Physics quiz (quiz_id = 1)
             db.run(`INSERT INTO questions (quiz_id, question_text, hint) 
