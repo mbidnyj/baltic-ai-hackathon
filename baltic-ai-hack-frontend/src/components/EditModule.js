@@ -14,27 +14,18 @@ const EditModule = () => {
     useEffect(() => {
         const fetchModuleData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/module/${moduleId}`);
-
-                // Log the response status to check if it hits the API correctly
-                console.log('Response Status:', response.status);
+                const response = await fetch(`http://localhost:8080/api/getQuizFromLocalStorage/${moduleId}`);
 
                 if (!response.ok) {
-                    // Log the response to capture what's going wrong
-                    console.error('Failed to fetch module data:', response);
                     throw new Error('Failed to fetch module data');
                 }
 
                 const data = await response.json();
 
-                // Ensure we are logging the data returned from the API to inspect it
-                console.log('Fetched Module Data:', data);
-
                 setModuleData(data.module || {}); // Safeguard against undefined
                 setQuestions(data.quiz?.questions || []); // Safeguard against missing quiz
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching module:', error); // Log the actual error
                 setError(error.message);
                 setLoading(false);
             }
@@ -44,10 +35,18 @@ const EditModule = () => {
     }, [moduleId]);
 
     // Handler to update the question
-    const handleUpdateQuestion = (index, updatedQuestion) => {
-        const newQuestions = [...questions];
-        newQuestions[index] = updatedQuestion;
-        setQuestions(newQuestions);
+    const handleUpdateQuestion = (newText, questionIndex) => {
+        const updatedQuestions = questions.map((question, qIndex) => {
+            if (qIndex === questionIndex) {
+                return {
+                    ...question,
+                    question_text: newText, // Update the question text
+                };
+            }
+            return question;
+        });
+
+        setQuestions(updatedQuestions);
     };
 
     // Handler to delete a question
@@ -55,6 +54,61 @@ const EditModule = () => {
         const newQuestions = questions.filter((_, i) => i !== index);
         setQuestions(newQuestions);
     };
+
+    // Handler to mark a choice as correct
+    const handleChoiceCorrectChange = (choiceIndex, questionIndex) => {
+        const updatedQuestions = questions.map((question, qIndex) => {
+            if (qIndex === questionIndex) {
+                const updatedChoices = question.choices.map((choice, cIndex) => ({
+                    ...choice,
+                    isCorrect: cIndex === choiceIndex, // Only the clicked choice is marked as correct
+                }));
+
+                return {
+                    ...question,
+                    choices: updatedChoices,
+                };
+            }
+            return question;
+        });
+
+        setQuestions(updatedQuestions);
+    };
+
+    const handlePointsChange = (newPoints, questionIndex) => {
+        const updatedQuestions = questions.map((question, qIndex) => {
+            if (qIndex === questionIndex) {
+                return {
+                    ...question,
+                    points: newPoints,
+                };
+            }
+            return question;
+        });
+
+        setQuestions(updatedQuestions);
+    };
+
+    // Handler to change a choice text
+    const handleChoiceTextChange = (userText, choiceIndex, questionIndex) => {
+        const updatedQuestions = questions.map((question, qIndex) => {
+            if (qIndex === questionIndex) {
+                const updatedChoices = question.choices.map((choice, cIndex) => ({
+                    ...choice,
+                    text: cIndex === choiceIndex ? userText : choice.text, // Update only the correct choice's text
+                }));
+
+                return {
+                    ...question,
+                    choices: updatedChoices,
+                };
+            }
+            return question;
+        });
+
+        setQuestions(updatedQuestions);
+    };
+
 
     const handlePublishModule = () => {
         console.log('Publish module logic here');
@@ -65,7 +119,12 @@ const EditModule = () => {
             ...questions,
             {
                 question_text: 'New Question',
-                options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+                choices: [
+                    { text: 'Option 1', isCorrect: false },
+                    { text: 'Option 2', isCorrect: false },
+                    { text: 'Option 3', isCorrect: false },
+                    { text: 'Option 4', isCorrect: false },
+                ],
                 points: 1,
                 question_type: 'MULTIPLE_CHOICE',
             },
@@ -123,21 +182,21 @@ const EditModule = () => {
                         <div className="flex gap-2">
                             <button
                                 onClick={handleAddQuestion}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700"
+                                className="px-4 py-2 bg-white border border-solid rounded-lg font-semibold text-gray-700"
                             >
                                 + Add Question
                             </button>
-                            <button className="px-4 py-2 bg-gray-200 text-blue-600 rounded-lg font-semibold shadow">
+                            <button className="px-4 py-2 bg-white border border-solid rounded-lg font-semibold  text-gray-700">
                                 Generate new questions
                             </button>
                             <button
                                 onClick={handlePublishModule}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
                             >
                                 Publish Study Module
                             </button>
                             <button
-                                className="px-4 py-3.5 bg-white border border-solid rounded-lg text-red-600 shadow-sm"
+                                className="px-4 py-3.5 bg-white border border-solid rounded-lg text-red-600"
                             >
                                 <img
                                     loading="lazy"
@@ -149,23 +208,29 @@ const EditModule = () => {
                     </div>
 
                     {/* File Upload Section */}
-                    <div className="mb-4">
+                    <div className="mb-4 max-w-[930px]">
                         <label className="block text-gray-700">Change file</label>
                         <input type="file" className="w-full px-3 py-2 border rounded-md" />
                     </div>
 
                     {/* Question List */}
-                    {questions.map((question, index) => (
-                        <QuestionCard
-                            key={index}
-                            question={question}
-                            index={index}
-                            totalQuestions={questions.length}
-                            onUpdateQuestion={(updatedQuestion) => handleUpdateQuestion(index, updatedQuestion)}
-                            onDeleteQuestion={() => handleDeleteQuestion(index)}
-                            isEditable={true} // Pass prop to make it editable
-                        />
-                    ))}
+                    <div className="space-y-2 mb-2">
+                        {questions.map((question, index) => (
+                            <QuestionCard
+                                key={index}
+                                question={question}
+                                index={index}
+                                totalQuestions={questions.length}
+                                onUpdateQuestion={(updatedQuestion) => handleUpdateQuestion(index, updatedQuestion)}
+                                onDelete={() => handleDeleteQuestion(index)}
+                                onPointsChange={handlePointsChange}
+                                onQuestionChange={handleUpdateQuestion}
+                                onChoiceTextChange={handleChoiceTextChange}
+                                onChoiceCorrectChange={handleChoiceCorrectChange} // Pass handler for marking correct choice
+                                isEditable={true} // Pass prop to make it editable
+                            />
+                        ))}
+                    </div>
                 </>
             )}
         </div>

@@ -10,23 +10,24 @@ const Layout = () => {
   const location = useLocation();
 
   let content;
-  if (userType === "teacher") {
-    content = <TeacherDashboard />; // Show teacher dashboard if logged in as teacher
-  } else if (userType === "student") {
-    content = <StudentDashboard />; // Show student dashboard if logged in as student
-  } else if (
-    location.pathname === "/login" ||
-    location.pathname === "/signup"
-  ) {
-    content = <Outlet />; // Render Login/Signup forms
+
+  // Only show dashboards on the home route "/"
+  if (location.pathname === "/") {
+    if (userType === "teacher") {
+      content = <TeacherDashboard />; // Teacher dashboard if logged in as teacher
+    } else if (userType === "student") {
+      content = <StudentDashboard />; // Student dashboard if logged in as student
+    } else {
+      content = <Outlet />; // Landing page or fallback for guests
+    }
   } else {
-    content = <Outlet />; // Fallback to nested routes or landing page by default
+    // Render child routes (like profile, module, etc.) for other routes
+    content = <Outlet />;
   }
 
   return (
     <div>
-      <Header />
-
+      <Header /> {/* Common Header for all pages */}
       <main className="px-8 py-12 bg-gray-50 min-h-screen">{content}</main>
     </div>
   );

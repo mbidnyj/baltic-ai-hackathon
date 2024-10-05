@@ -7,6 +7,7 @@ const postModule = require("./postModule");
 const recommendation = require("./recommendation");
 const getModules = require("./getModules");
 const getModuleDetails = require("./getModuleDetails");
+const getQuizFromLocalStorage = require("./getQuizFromLocalStorage");
 
 function getApp() {
     const app = express();
@@ -27,6 +28,7 @@ function getApp() {
     app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);
+    app.get("/api/getQuizFromLocalStorage/:id", getQuizFromLocalStorage);
 
     return app;
 }
