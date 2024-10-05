@@ -5,11 +5,6 @@ const Header = ({ userType = 'teacher' }) => {
     <header className="bg-white shadow-sm p-4 flex justify-between items-center space-x-8">
       {/* Logo Section */}
       <div className="flex items-center space-x-6">
-        <img
-          src="/path/to/preline-logo.png" // Replace with your actual logo path
-          alt="Preline Logo"
-          className="h-8"
-        />
         <span className="text-xl font-semibold text-blue-600">preline</span>
       </div>
 
