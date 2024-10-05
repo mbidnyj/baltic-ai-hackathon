@@ -34,11 +34,35 @@ const setupDatabase = () => {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 description TEXT,
+                subject TEXT,
+                grade INTEGER,
+                no_questions INTEGER,
+                enrolled_students INTEGER,
                 creator_id INTEGER NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (creator_id) REFERENCES users(id)
             )`, (err) => {
                 if (err) console.error("Error creating modules table:", err.message);
+            });
+
+            // Insert sample data into the `modules` table only if it is empty
+            db.get(`SELECT COUNT(*) as count FROM modules`, (err, row) => {
+                if (err) {
+                    console.error("Error counting modules:", err.message);
+                } else if (row.count === 0) {
+                    // Insert sample modules
+                    db.run(`INSERT INTO modules (title, description, subject, grade, no_questions, enrolled_students, creator_id) VALUES 
+                        ('Physics Fundamentals', 'Learn about the laws of motion.', 'PHYSICS', 8, 15, 48, 1),
+                        ('World History', 'Understand key events in world history.', 'HISTORY', 4, 10, 7, 2)`, (err) => {
+                        if (err) {
+                            console.error("Error inserting sample modules:", err.message);
+                        } else {
+                            console.log("Sample modules inserted successfully.");
+                        }
+                    });
+                } else {
+                    console.log(`Modules table already has ${row.count} records.`);
+                }
             });
 
             // Create quizzes table

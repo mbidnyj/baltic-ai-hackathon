@@ -60,7 +60,7 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 ModuleCard.propTypes = {
   moduleId: PropTypes.string.isRequired, // Unique module ID to be passed
   title: PropTypes.string.isRequired,
-  subject: PropTypes.oneOf(['SCIENCE', 'MATH', 'BIOLOGY', 'ENGLISH', 'HISTORY']).isRequired,
+  subject: PropTypes.oneOf(['SCIENCE', 'MATH', 'BIOLOGY', 'ENGLISH', 'HISTORY', 'PHYSICS']).isRequired,
   description: PropTypes.string.isRequired,
   questions: PropTypes.string.isRequired,
   grade: PropTypes.oneOf([4, 5, 6, 7, 8, 9]).isRequired,

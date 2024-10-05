@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ModuleCard from './ModuleCard';
 import AddModuleModal from './AddModuleModal';
-import AddIcon from '@mui/icons-material/Add'; // Material Icon for "Add"
+import AddIcon from '@mui/icons-material/Add';
 
 const TeacherDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,8 +9,12 @@ const TeacherDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch modules from the backend API
+  // Log to confirm the component is rendering
+  console.log('TeacherDashboard component rendered');
+
   useEffect(() => {
+    console.log('Fetching modules...'); // Add this log
+
     const fetchModules = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/modules');
@@ -18,9 +22,12 @@ const TeacherDashboard = () => {
           throw new Error('Failed to fetch modules');
         }
         const data = await response.json();
-        setModules(data); // Assuming the API returns an array of modules
+        console.log('Modules fetched:', data); // Log the data
+
+        setModules(data);
         setLoading(false);
       } catch (err) {
+        console.error('Error:', err.message); // Add this log
         setError(err.message);
         setLoading(false);
       }

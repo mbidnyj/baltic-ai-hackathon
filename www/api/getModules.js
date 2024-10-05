@@ -1,37 +1,14 @@
-// Example data for modules
-const modules = [
-    {
-        moduleId: "1",
-        title: "Physics Fundamentals",
-        subject: "PHYSICS",
-        description: "Learn about the laws of motion.",
-        questions: 15,
-        grade: 8,
-        students: 48,
-        moduleCreatorId: "1001" // Example creator ID
-    },
-    {
-        moduleId: "2",
-        title: "World History",
-        subject: "HISTORY",
-        description: "Understand key events in world history.",
-        questions: 10,
-        grade: 4,
-        students: 7,
-        moduleCreatorId: "1002" // Example creator ID
-    }
-];
+const { db } = require("../integrations/dbModule"); // Import your SQLite connection
 
-// Handler for the GET /api/modules route
-module.exports = (req, res) => {
-    console.log('Received request at /api/modules');
-    const { moduleCreatorId } = req.query;
+module.exports = async (req, res) => {
+  const query = `SELECT * FROM modules`; // Modify this query based on your database structure
 
-    let filteredModules = modules;
-    if (moduleCreatorId) {
-        filteredModules = modules.filter(module => module.moduleCreatorId === moduleCreatorId);
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Failed to fetch modules' });
     }
 
-    // Return JSON response
-    res.json(filteredModules);
+    // Send the modules data back to the frontend
+    res.status(200).json(rows);
+  });
 };

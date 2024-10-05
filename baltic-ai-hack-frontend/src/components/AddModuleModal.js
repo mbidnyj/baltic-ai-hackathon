@@ -14,21 +14,25 @@ const AddModuleModal = ({ isOpen, onClose }) => {
 
   const handleGenerateQuiz = async () => {
     try {
+      // Assuming you have the creator's (teacher's) ID stored in state or context
+      const creatorId = 1; // Replace this with the actual creator ID (e.g., fetched from authentication state)
+  
       const requestData = {
         title: quizTitle,
         description,
+        creatorId, // Add creatorId to the request payload
         subject,
         grade,
         questionCount,
         questionType,
       };
-
+  
       const response = await axios.post('http://localhost:8080/api/module', requestData);
       console.log('Response from server:', response.data);
     } catch (error) {
       console.error('Error generating quiz:', error);
     }
-  };
+  };  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -69,6 +73,7 @@ const AddModuleModal = ({ isOpen, onClose }) => {
               <option value="BIOLOGY">BIOLOGY</option>
               <option value="ENGLISH">ENGLISH</option>
               <option value="HISTORY">HISTORY</option>
+              <option value="PHYSICS">PHYSICS</option>
             </select>
             <select
                 value={grade}
