@@ -68,9 +68,10 @@ const TeacherDashboard = () => {
         {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module) => (
+              console.log(module),
               <ModuleCard
-                key={module.moduleId}
-                moduleId={module.moduleId}
+                key={module.id}
+                moduleId={module.id}
                 title={module.title}
                 subject={module.subject}
                 description={module.description}

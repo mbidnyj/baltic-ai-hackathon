@@ -10,7 +10,26 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 
   // Handle preview button click
   const handlePreviewClick = () => {
-    navigate(`/module/${moduleId}/preview`, { state: { moduleId, title, subject, description, questions, grade, students } });
+    navigate(`/module/${moduleId}/preview`, {
+      state: {
+        moduleId,
+        title,
+        subject,
+        description,
+        questions,
+        grade,
+        students,
+      },
+    });
+  };
+  
+
+  // Handle edit button click
+  const handleEditClick = () => {
+    console.log(moduleId);
+    navigate(`/module/${moduleId}/edit`, {
+      state: { moduleId, title, subject, description, questions, grade, students },
+    });
   };
 
   return (
@@ -48,7 +67,10 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
           <button className="py-2 px-4 inline-flex justify-center items-center gap-x-2.5 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 transition-all">
             Assign module
           </button>
-          <button className="py-3.5 px-4 inline-flex justify-center items-center gap-x-2.5 text-sm font-semibold rounded-lg border border-gray-300 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:bg-gray-300 transition-all">
+          <button
+            onClick={handleEditClick}
+            className="py-3.5 px-4 inline-flex justify-center items-center gap-x-2.5 text-sm font-semibold rounded-lg border border-gray-300 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:bg-gray-300 transition-all"
+          >
             Edit module
           </button>
         </div>
@@ -58,11 +80,11 @@ const ModuleCard = ({ moduleId, title, subject, description, questions, grade, s
 };
 
 ModuleCard.propTypes = {
-  moduleId: PropTypes.string.isRequired, // Unique module ID to be passed
+  moduleId: PropTypes.number.isRequired, // Unique module ID to be passed
   title: PropTypes.string.isRequired,
   subject: PropTypes.oneOf(['SCIENCE', 'MATH', 'BIOLOGY', 'ENGLISH', 'HISTORY', 'PHYSICS']).isRequired,
   description: PropTypes.string.isRequired,
-  questions: PropTypes.string.isRequired,
+  questions: PropTypes.number.isRequired, // Changed to number since it's a count
   grade: PropTypes.oneOf([4, 5, 6, 7, 8, 9]).isRequired,
   students: PropTypes.number.isRequired,
 };

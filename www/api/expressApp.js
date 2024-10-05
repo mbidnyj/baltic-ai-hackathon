@@ -23,7 +23,7 @@ function getApp() {
 
     app.get("/api/user", user);
     app.get("/api/quiz", getQuiz); // have to specify the moduleId as well
-    app.get('/api/module/:moduleId/preview', getModuleDetails);
+    app.get('/api/module/:moduleId', getModuleDetails);
     app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);

@@ -1,45 +1,100 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const QuestionCard = ({ question, options, hint, currentIndex, totalQuestions }) => {
-  const [selectedOption, setSelectedOption] = useState(null); // Track selected option
-  const [showHint, setShowHint] = useState(false); // Track whether the hint is displayed
+const QuestionCard = ({ 
+  question, 
+  index, 
+  totalQuestions, 
+  onUpdateQuestion, 
+  onDeleteQuestion, 
+  isEditable 
+}) => {
+  const [currentQuestion, setCurrentQuestion] = useState(question);
+
+  const handleOptionChange = (optionIndex, newValue) => {
+    const updatedOptions = [...currentQuestion.options];
+    updatedOptions[optionIndex] = newValue;
+    const updatedQuestion = { ...currentQuestion, options: updatedOptions };
+    setCurrentQuestion(updatedQuestion);
+    onUpdateQuestion(updatedQuestion); // Call the update function passed as a prop
+  };
 
   return (
     <div className="p-4 mb-4 border rounded-lg shadow-sm bg-white">
-      {/* Question and navigation */}
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-bold">{question}</h3>
-        <span className="text-gray-400 text-sm">{`${currentIndex}/${totalQuestions}`}</span>
+      {/* Question and Number */}
+      <div className="flex justify-between items-center">
+        {isEditable ? (
+          <input
+            type="text"
+            value={currentQuestion.question_text}
+            onChange={(e) =>
+              setCurrentQuestion({
+                ...currentQuestion,
+                question_text: e.target.value,
+              })
+            }
+            className="text-lg font-bold mb-2 border px-2 py-1 rounded w-full"
+          />
+        ) : (
+          <h3 className="text-lg font-bold mb-2">{currentQuestion.question_text}</h3>
+        )}
+        <span className="text-gray-500">
+          {index + 1}/{totalQuestions}
+        </span>
       </div>
 
-      {/* Answer options */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        {options.map((option, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedOption(option)} // Select the clicked option
-            className={`block w-full text-center p-2 border rounded-lg ${
-              selectedOption === option ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'
-            }`}
-          >
-            {option}
-          </button>
+      {/* Options */}
+      <div className="space-y-2">
+        {currentQuestion.options.map((option, optionIndex) => (
+          <div key={optionIndex}>
+            {isEditable ? (
+              <input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(optionIndex, e.target.value)}
+                className="block w-full text-left p-2 border rounded-lg"
+              />
+            ) : (
+              <button
+                key={optionIndex}
+                className="block w-full text-left p-2 border rounded-lg bg-gray-50"
+              >
+                {option}
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
-      {/* Hint toggle */}
-      <button
-        onClick={() => setShowHint(!showHint)}
-        className="block text-blue-600 hover:underline mx-auto"
-      >
-        💡 Need a hint?
-      </button>
+      {/* Editable Actions */}
+      {isEditable && (
+        <div className="flex justify-between items-center mt-4">
+          {/* Delete Button */}
+          <button
+            onClick={onDeleteQuestion}
+            className="text-red-500 flex items-center gap-2"
+          >
+            🗑️ Delete
+          </button>
+          {/* Add Option Button */}
+          <button
+            onClick={() =>
+              handleOptionChange(
+                currentQuestion.options.length,
+                `Option ${currentQuestion.options.length + 1}`
+              )
+            }
+            className="text-blue-600 flex items-center gap-2"
+          >
+            + Add Option
+          </button>
+        </div>
+      )}
 
-      {/* Display hint */}
-      {showHint && hint && (
-        <div className="mt-2 text-sm text-gray-600">
-          <span className="font-semibold">Hint:</span> {hint}
+      {/* Hint (only display if it's not editable) */}
+      {!isEditable && currentQuestion.hint && (
+        <div className="mt-4 text-sm text-gray-600">
+          <span className="font-semibold">Hint:</span> {currentQuestion.hint}
         </div>
       )}
     </div>
@@ -47,11 +102,20 @@ const QuestionCard = ({ question, options, hint, currentIndex, totalQuestions })
 };
 
 QuestionCard.propTypes = {
-  question: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
-  hint: PropTypes.string,
-  currentIndex: PropTypes.number.isRequired,
+  question: PropTypes.shape({
+    question_text: PropTypes.string.isRequired,
+    options: PropTypes.arrayOf(PropTypes.string).isRequired,
+    hint: PropTypes.string,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
   totalQuestions: PropTypes.number.isRequired,
+  onUpdateQuestion: PropTypes.func.isRequired,
+  onDeleteQuestion: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool,
+};
+
+QuestionCard.defaultProps = {
+  isEditable: false,
 };
 
 export default QuestionCard;

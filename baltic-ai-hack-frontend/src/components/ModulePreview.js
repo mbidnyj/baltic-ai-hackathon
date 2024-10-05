@@ -14,7 +14,7 @@ const ModulePreview = () => {
   useEffect(() => {
     const fetchModuleData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/module/${moduleId}/preview`);
+        const response = await fetch(`http://localhost:8080/api/module/${moduleId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch module data');
         }
