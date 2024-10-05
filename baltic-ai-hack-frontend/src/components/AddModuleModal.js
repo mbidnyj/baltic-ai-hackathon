@@ -21,42 +21,61 @@ const AddModuleModal = ({ isOpen, onClose }) => {
     };
 
     const handleGenerateQuiz = async () => {
-        try {
-            const creatorId = 1; // Replace this with the actual creator ID
+        const maxRetries = 3;
+        let retryCount = 0;
 
-            const formData = {
-                title: quizTitle,
-                description: description,
-                creatorId: creatorId,
-                subject: subject,
-                grade: grade,
-                questionCount: questionCount,
-                questionType: questionType,
-            };
+        const sendRequest = async () => {
+            try {
+                const creatorId = 1; // Replace this with the actual creator ID
 
-            console.log("Sending request to generate quiz...");
-            console.log("Form data:", formData);
+                const formData = new FormData();
+                formData.append("title", quizTitle);
+                formData.append("description", description);
+                formData.append("creatorId", creatorId);
+                formData.append("subject", subject);
+                formData.append("grade", grade);
+                formData.append("questionCount", questionCount);
+                formData.append("questionType", questionType);
+                formData.append("file", file);
 
-            const response = await axios.post("http://localhost:8080/api/module", formData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            console.log("Response from server:", response.data);
+                console.log("Sending request to generate quiz...");
 
-            const moduleId = response.data.moduleId;
-            navigate(`/module/${moduleId}/edit`);
-        } catch (error) {
-            console.error("Error generating quiz:", error);
-            if (error.response) {
-                console.error("Response data:", error.response.data);
-                console.error("Response status:", error.response.status);
-            } else if (error.request) {
-                console.error("No response received:", error.request);
-            } else {
-                console.error("Error setting up request:", error.message);
+                const response = await axios.post("http://localhost:8080/api/module", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                console.log("Response from server:", response.data);
+
+                const moduleId = response.data.moduleId;
+                navigate(`/module/${moduleId}/edit`);
+            } catch (error) {
+                console.error("Error generating quiz:", error);
+                if (error.response && error.response.status === 500) {
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`Retrying request (attempt ${retryCount})...`);
+                        await sendRequest();
+                    } else {
+                        console.error("Max retries reached. Unable to generate quiz.");
+                        // Here you might want to show an error message to the user
+                    }
+                } else {
+                    // Handle other types of errors as before
+                    if (error.response) {
+                        console.error("Response data:", error.response.data);
+                        console.error("Response status:", error.response.status);
+                    } else if (error.request) {
+                        console.error("No response received:", error.request);
+                    } else {
+                        console.error("Error setting up request:", error.message);
+                    }
+                    // Here you might want to show an error message to the user
+                }
             }
-        }
+        };
+
+        await sendRequest();
     };
 
     return (
