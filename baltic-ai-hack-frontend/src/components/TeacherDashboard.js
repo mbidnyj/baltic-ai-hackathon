@@ -9,12 +9,7 @@ const TeacherDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Log to confirm the component is rendering
-    console.log('TeacherDashboard component rendered');
-
     useEffect(() => {
-        console.log('Fetching modules...');
-
         const fetchModules = async () => {
             try {
                 const response = await fetch('http://localhost:8080/api/modules');
@@ -22,7 +17,6 @@ const TeacherDashboard = () => {
                     throw new Error('Failed to fetch modules');
                 }
                 const data = await response.json();
-                console.log('Modules fetched:', data); // Log the fetched data
 
                 setModules(data);
                 setLoading(false);

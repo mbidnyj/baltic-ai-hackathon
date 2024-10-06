@@ -3,10 +3,13 @@ const cors = require("cors");
 const compression = require("compression");
 const user = require("./user");
 const getQuiz = require("./getQuiz");
+const getQuizById = require("./getQuizById");
+const postQuiz = require("./postQuiz");
 const postModule = require("./postModule");
 const recommendation = require("./recommendation");
 const getModules = require("./getModules");
 const getModuleDetails = require("./getModuleDetails");
+const getQuizFromLocalStorage = require("./getQuizFromLocalStorage.js");
 
 function getApp() {
     const app = express();
@@ -23,10 +26,13 @@ function getApp() {
 
     app.get("/api/user", user);
     app.get("/api/quiz", getQuiz); // have to specify the moduleId as well
-    app.get('/api/module/:moduleId', getModuleDetails);
+    app.get("/api/quiz/:quizId", getQuizById);
+    app.post("/api/quiz", postQuiz);
+    app.get("/api/module/:moduleId", getModuleDetails);
     app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);
+    app.get("/api/getQuizFromLocalStorage/:id", getQuizFromLocalStorage);
 
     return app;
 }
