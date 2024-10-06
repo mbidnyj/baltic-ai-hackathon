@@ -53,6 +53,7 @@ const setupDatabase = () => {
             // Create questions table
             db.run(`CREATE TABLE IF NOT EXISTS questions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                student_id INTEGER,
                 quiz_id INTEGER NOT NULL,
                 question_text TEXT NOT NULL,
                 hint TEXT,

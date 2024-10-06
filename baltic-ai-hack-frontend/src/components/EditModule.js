@@ -1,7 +1,10 @@
+// src/components/EditModule.js
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import QuestionCard from './QuestionCard'; // Ensure this component exists and is correctly implemented
+import axios from 'axios'; // Import axios
 
 const EditModule = () => {
     const { moduleId } = useParams(); // Get moduleId from the URL params
@@ -100,7 +103,7 @@ const EditModule = () => {
             // Fetch from backend
             fetchModuleData();
         }
-    }, [moduleId]);
+    }, [moduleId, moduleData]); // Added moduleData as dependency
 
     // Handler to update the question text
     const handleUpdateQuestion = (newText, questionIndex) => {
@@ -178,11 +181,7 @@ const EditModule = () => {
         setQuestions(updatedQuestions);
     };
 
-    const handlePublishModule = () => {
-        console.log('Publish module logic here');
-        // Implement publish logic here, possibly sending data to the backend
-    };
-
+    // Handler to add a new question
     const handleAddQuestion = () => {
         setQuestions([
             ...questions,
@@ -199,6 +198,39 @@ const EditModule = () => {
                 hint: '',
             },
         ]);
+    };
+
+    // Handler to publish the module (save to backend)
+    const handlePublishModule = async () => {
+        try {
+            const creatorId = 1; // Replace with actual creator ID
+            const moduleId = moduleInfo.moduleId;
+            const isInitial = true; // Adjust based on your logic
+
+            // Prepare the data
+            const quizData = {
+                module_id: moduleId,
+                is_initial: isInitial,
+                created_by: creatorId,
+                questions: questions.map((question) => ({
+                    question_text: question.question_text,
+                    hint: question.hint,
+                    choices: question.choices.map((choice) => ({
+                        text: choice.text,
+                        isCorrect: choice.isCorrect,
+                    })),
+                })),
+            };
+
+            // Send the data to the backend
+            const response = await axios.post('http://localhost:8080/api/quiz', quizData);
+            console.log('Quiz saved successfully:', response.data);
+
+            navigate(`/module/${moduleId}/preview`);
+        } catch (error) {
+            console.error('Error saving quiz:', error);
+            // Handle error (e.g., show error message to user)
+        }
     };
 
     return (
@@ -229,6 +261,7 @@ const EditModule = () => {
                                         <img
                                             loading="lazy"
                                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/86c6336195520e4093240f4566c5b56a63261e1de2bc373f48ecf19f6968ae8e"
+                                            alt="Questions Icon" // Added alt prop
                                             className="object-contain shrink-0 self-stretch my-auto w-3 aspect-square"
                                         />
                                         <div className="gap-2 self-stretch px-1 my-auto">
@@ -241,6 +274,7 @@ const EditModule = () => {
                                         <img
                                             loading="lazy"
                                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/e25f42e4cd3c5ef2cd449ca923e46008948393e2516bb0229a7466fc7e3972ee"
+                                            alt="Points Icon" // Added alt prop
                                             className="object-contain shrink-0 self-stretch my-auto w-3 aspect-square"
                                         />
                                         <div className="gap-2 self-stretch px-1 my-auto">
@@ -274,6 +308,7 @@ const EditModule = () => {
                                 <img
                                     loading="lazy"
                                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/6a4e88b2c927a2e8cbe917c2f00e2c87d5e85adf4e2506737cf234061a3880f0"
+                                    alt="Delete Module" // Added alt prop
                                     className="object-contain w-4"
                                 />
                             </button>
@@ -312,6 +347,7 @@ const EditModule = () => {
             )}
         </div>
     );
+
 };
 
 export default EditModule;
