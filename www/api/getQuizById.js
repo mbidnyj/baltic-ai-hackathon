@@ -1,28 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const { db } = require('../integrations/dbModule');
+const express = require("express");
+const { db } = require("../integrations/dbModule");
 
-// Endpoint to get a quiz by quiz_id
-router.get('/quiz/:quiz_id', (req, res) => {
+module.exports = (req, res) => {
     const quiz_id = req.params.quiz_id;
 
     // First, get the quiz info
     const getQuizQuery = `SELECT * FROM quizzes WHERE id = ?`;
     db.get(getQuizQuery, [quiz_id], (err, quiz) => {
         if (err) {
-            console.error('Error retrieving quiz:', err.message);
-            return res.status(500).json({ success: false, message: 'Failed to retrieve quiz' });
+            console.error("Error retrieving quiz:", err.message);
+            return res.status(500).json({ success: false, message: "Failed to retrieve quiz" });
         }
         if (!quiz) {
-            return res.status(404).json({ success: false, message: 'Quiz not found' });
+            return res.status(404).json({ success: false, message: "Quiz not found" });
         }
 
         // Now get the questions
         const getQuestionsQuery = `SELECT * FROM questions WHERE quiz_id = ?`;
         db.all(getQuestionsQuery, [quiz_id], (err, questions) => {
             if (err) {
-                console.error('Error retrieving questions:', err.message);
-                return res.status(500).json({ success: false, message: 'Failed to retrieve questions' });
+                console.error("Error retrieving questions:", err.message);
+                return res.status(500).json({ success: false, message: "Failed to retrieve questions" });
             }
 
             // For each question, get the answer options
@@ -31,7 +29,7 @@ router.get('/quiz/:quiz_id', (req, res) => {
                     const getOptionsQuery = `SELECT * FROM answer_options WHERE question_id = ?`;
                     db.all(getOptionsQuery, [question.id], (err, options) => {
                         if (err) {
-                            console.error('Error retrieving answer options:', err.message);
+                            console.error("Error retrieving answer options:", err.message);
                             reject(err);
                         } else {
                             question.options = options.map((option) => ({
@@ -66,11 +64,9 @@ router.get('/quiz/:quiz_id', (req, res) => {
                     res.status(200).json({ success: true, quiz: quizData });
                 })
                 .catch((err) => {
-                    console.error('Error retrieving answer options:', err.message);
-                    res.status(500).json({ success: false, message: 'Failed to retrieve answer options' });
+                    console.error("Error retrieving answer options:", err.message);
+                    res.status(500).json({ success: false, message: "Failed to retrieve answer options" });
                 });
         });
     });
-});
-
-module.exports = router;
+};

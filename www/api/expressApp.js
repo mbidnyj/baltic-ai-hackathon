@@ -9,7 +9,7 @@ const postModule = require("./postModule");
 const recommendation = require("./recommendation");
 const getModules = require("./getModules");
 const getModuleDetails = require("./getModuleDetails");
-const getQuizFromLocalStorage = require("./getQuizFromLocalStorage");
+const getQuizFromLocalStorage = require("./getQuizFromLocalStorage.js");
 
 function getApp() {
     const app = express();
@@ -28,7 +28,7 @@ function getApp() {
     app.get("/api/quiz", getQuiz); // have to specify the moduleId as well
     app.get("/api/quiz/:quizId", getQuizById);
     app.post("/api/quiz", postQuiz);
-    app.get('/api/module/:moduleId', getModuleDetails);
+    app.get("/api/module/:moduleId", getModuleDetails);
     app.get("/api/modules", getModules);
     app.post("/api/module", postModule);
     app.get("/api/recommendation", recommendation);
