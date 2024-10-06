@@ -48,7 +48,8 @@ const AddModuleModal = ({ isOpen, onClose }) => {
                 console.log("Response from server:", response.data);
 
                 const moduleId = response.data.moduleId;
-                navigate(`/module/${moduleId}/edit`);
+                // In AddModuleModal component, inside handleGenerateQuiz function
+                navigate(`/module/${moduleId}/edit`, { state: { moduleData: response.data } });
             } catch (error) {
                 console.error("Error generating quiz:", error);
                 if (error.response && error.response.status === 500) {
@@ -158,9 +159,8 @@ const AddModuleModal = ({ isOpen, onClose }) => {
                                 <button
                                     key={count}
                                     onClick={() => setQuestionCount(count)}
-                                    className={`text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none ${
-                                        questionCount === count ? "bg-blue-500 text-white" : ""
-                                    }`}
+                                    className={`text-xs px-3 py-1 border border-gray-300 rounded-full focus:outline-none ${questionCount === count ? "bg-blue-500 text-white" : ""
+                                        }`}
                                 >
                                     {count}
                                 </button>

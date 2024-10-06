@@ -184,11 +184,13 @@ Json template:
 }`;
 
                 try {
-                    const result = await prompt_groq_text(prompt, true);
+                    const resultString = await prompt_groq_text(prompt, true);
+                    const result = JSON.parse(resultString); // Parse the JSON string into an object
+
                     res.status(200).json({
                         success: true,
                         moduleId,
-                        quiz: result,
+                        result, // Now result is an object
                     });
                 } catch (error) {
                     console.error("Error generating quiz:", error.message);
