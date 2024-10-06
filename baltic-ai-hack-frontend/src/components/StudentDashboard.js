@@ -12,7 +12,11 @@ const StudentDashboard = () => {
         <QuizIntro />
       ) : quizView === "result" ? (
         <ResultPage />
-      ) : null}
+      ) : (
+        <div className="container mx-auto py-10">
+          <h1 className="font-bold text-5xl">Welcome to your dashboard!</h1>
+        </div>
+      )}
     </>
   );
 };
