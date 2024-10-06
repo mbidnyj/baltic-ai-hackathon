@@ -8,6 +8,8 @@ import SignUp from "./components/Auth/SignUp";
 import { UserProvider } from "./context/UserContext";
 import LandingPage from "./components/LandingPage";
 import ProfilePage from "./components/ProfilePage";
+import QuizPage from "./components/QuizPage";
+import ResultPage from "./components/ResultPage";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route path="/module/:moduleId/edit" element={<EditModule />} />
 
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/result" element={<ResultPage />} />
           </Route>
         </Routes>
       </UserProvider>

@@ -4,6 +4,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userType, setUserType] = useState("guest"); // `setUserType` is defined here
+  const [quizView, setQuizView] = useState("quiz");
 
   // Function to log in the user and set the userType
   const loginUser = (type) => {
@@ -16,7 +17,16 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ userType, setUserType, loginUser, signOut }}>
+    <UserContext.Provider
+      value={{
+        userType,
+        setUserType,
+        loginUser,
+        signOut,
+        quizView,
+        setQuizView,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

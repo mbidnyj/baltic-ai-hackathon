@@ -1,6 +1,7 @@
 import React from "react";
 import { useUser } from "../context/UserContext";
 import SignOutButton from "./SignOutButton";
+import Button from "./Button";
 
 const ProfilePage = () => {
   const { userType } = useUser();
@@ -39,9 +40,7 @@ const ProfilePage = () => {
           </p>
           {userType === "guest" ? null : (
             <div className="flex gap-4 items-center justify-center mt-4">
-              <button className=" bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded  font-bold">
-                Edit Profile
-              </button>
+              <Button>Edit Profile</Button>
               <SignOutButton />
             </div>
           )}

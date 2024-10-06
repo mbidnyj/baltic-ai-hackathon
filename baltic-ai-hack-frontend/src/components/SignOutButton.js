@@ -1,6 +1,7 @@
 import React from "react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
 
 const SignOutButton = () => {
   const { signOut } = useUser();
@@ -12,12 +13,9 @@ const SignOutButton = () => {
   };
 
   return (
-    <button
-      onClick={handleSignOut}
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-    >
+    <Button onClick={handleSignOut} color="danger">
       Sign Out
-    </button>
+    </Button>
   );
 };
 

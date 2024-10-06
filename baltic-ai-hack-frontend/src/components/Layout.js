@@ -28,7 +28,7 @@ const Layout = () => {
   return (
     <div>
       <Header /> {/* Common Header for all pages */}
-      <main className="px-8 py-12 bg-gray-50 min-h-screen">{content}</main>
+      <main className="bg-white min-h-screen">{content}</main>
     </div>
   );
 };
